@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -14,6 +14,18 @@
 		6B4FA6DB230694CB00098DEE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6B4FA6D9230694CB00098DEE /* LaunchScreen.storyboard */; };
 		6B4FA6E6230694CE00098DEE /* ZQVideoPlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B4FA6E5230694CE00098DEE /* ZQVideoPlayerTests.swift */; };
 		6B4FA6F1230694CE00098DEE /* ZQVideoPlayerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B4FA6F0230694CE00098DEE /* ZQVideoPlayerUITests.swift */; };
+		6B4FA70A2306963800098DEE /* DHPlayerView+Obsever.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B4FA6FF2306963500098DEE /* DHPlayerView+Obsever.swift */; };
+		6B4FA70C2306963800098DEE /* DHPlayerView+Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B4FA7012306963600098DEE /* DHPlayerView+Screen.swift */; };
+		6B4FA70D2306963800098DEE /* DHPlayerViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B4FA7022306963600098DEE /* DHPlayerViewDelegate.swift */; };
+		6B4FA70E2306963800098DEE /* DHPlayerWrapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B4FA7032306963600098DEE /* DHPlayerWrapView.swift */; };
+		6B4FA70F2306963800098DEE /* DHPlayerHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B4FA7042306963600098DEE /* DHPlayerHUD.swift */; };
+		6B4FA7102306963800098DEE /* DHAmplifyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B4FA7052306963700098DEE /* DHAmplifyButton.swift */; };
+		6B4FA7112306963800098DEE /* DHMediaTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B4FA7062306963700098DEE /* DHMediaTool.swift */; };
+		6B4FA7122306963800098DEE /* DHPlayerView+GestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B4FA7072306963700098DEE /* DHPlayerView+GestureRecognizer.swift */; };
+		6B4FA7132306963800098DEE /* DHPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B4FA7082306963700098DEE /* DHPlayerView.swift */; };
+		6B4FA7142306963800098DEE /* DHPlayerConsolerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B4FA7092306963700098DEE /* DHPlayerConsolerView.swift */; };
+		6B4FA7312306975600098DEE /* DHConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B4FA7302306975600098DEE /* DHConst.swift */; };
+		D11A396239AAE5CE2212F5F6 /* Pods_ZQVideoPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5026F111BB4B4A0D3AE5F4BC /* Pods_ZQVideoPlayer.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +46,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		24C897CB42295635A7E16BC2 /* Pods-ZQVideoPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZQVideoPlayer.release.xcconfig"; path = "Target Support Files/Pods-ZQVideoPlayer/Pods-ZQVideoPlayer.release.xcconfig"; sourceTree = "<group>"; };
+		5026F111BB4B4A0D3AE5F4BC /* Pods_ZQVideoPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ZQVideoPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		556B8F56BAB2EA276344EF57 /* Pods-ZQVideoPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZQVideoPlayer.debug.xcconfig"; path = "Target Support Files/Pods-ZQVideoPlayer/Pods-ZQVideoPlayer.debug.xcconfig"; sourceTree = "<group>"; };
 		6B4FA6CD2306941800098DEE /* ZQVideoPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZQVideoPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B4FA6D02306941900098DEE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6B4FA6D22306941900098DEE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -47,6 +62,17 @@
 		6B4FA6EC230694CE00098DEE /* ZQVideoPlayerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ZQVideoPlayerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B4FA6F0230694CE00098DEE /* ZQVideoPlayerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZQVideoPlayerUITests.swift; sourceTree = "<group>"; };
 		6B4FA6F2230694CE00098DEE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6B4FA6FF2306963500098DEE /* DHPlayerView+Obsever.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DHPlayerView+Obsever.swift"; sourceTree = "<group>"; };
+		6B4FA7012306963600098DEE /* DHPlayerView+Screen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DHPlayerView+Screen.swift"; sourceTree = "<group>"; };
+		6B4FA7022306963600098DEE /* DHPlayerViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DHPlayerViewDelegate.swift; sourceTree = "<group>"; };
+		6B4FA7032306963600098DEE /* DHPlayerWrapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DHPlayerWrapView.swift; sourceTree = "<group>"; };
+		6B4FA7042306963600098DEE /* DHPlayerHUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DHPlayerHUD.swift; sourceTree = "<group>"; };
+		6B4FA7052306963700098DEE /* DHAmplifyButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DHAmplifyButton.swift; sourceTree = "<group>"; };
+		6B4FA7062306963700098DEE /* DHMediaTool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DHMediaTool.swift; sourceTree = "<group>"; };
+		6B4FA7072306963700098DEE /* DHPlayerView+GestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DHPlayerView+GestureRecognizer.swift"; sourceTree = "<group>"; };
+		6B4FA7082306963700098DEE /* DHPlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DHPlayerView.swift; sourceTree = "<group>"; };
+		6B4FA7092306963700098DEE /* DHPlayerConsolerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DHPlayerConsolerView.swift; sourceTree = "<group>"; };
+		6B4FA7302306975600098DEE /* DHConst.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DHConst.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +80,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D11A396239AAE5CE2212F5F6 /* Pods_ZQVideoPlayer.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,6 +101,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		061A8C9AAAEFABD9A70D4E98 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				556B8F56BAB2EA276344EF57 /* Pods-ZQVideoPlayer.debug.xcconfig */,
+				24C897CB42295635A7E16BC2 /* Pods-ZQVideoPlayer.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		0C7AFE3E49D9A58E2003969F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5026F111BB4B4A0D3AE5F4BC /* Pods_ZQVideoPlayer.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		6B4FA6C42306941700098DEE = {
 			isa = PBXGroup;
 			children = (
@@ -81,6 +125,8 @@
 				6B4FA6E4230694CE00098DEE /* ZQVideoPlayerTests */,
 				6B4FA6EF230694CE00098DEE /* ZQVideoPlayerUITests */,
 				6B4FA6CE2306941800098DEE /* Products */,
+				061A8C9AAAEFABD9A70D4E98 /* Pods */,
+				0C7AFE3E49D9A58E2003969F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -97,6 +143,7 @@
 		6B4FA6CF2306941900098DEE /* ZQVideoPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				6B4FA6FE2306955C00098DEE /* demo */,
 				6B4FA6D02306941900098DEE /* AppDelegate.swift */,
 				6B4FA6D22306941900098DEE /* ViewController.swift */,
 				6B4FA6D42306941A00098DEE /* Main.storyboard */,
@@ -125,6 +172,24 @@
 			path = ZQVideoPlayerUITests;
 			sourceTree = "<group>";
 		};
+		6B4FA6FE2306955C00098DEE /* demo */ = {
+			isa = PBXGroup;
+			children = (
+				6B4FA7302306975600098DEE /* DHConst.swift */,
+				6B4FA7042306963600098DEE /* DHPlayerHUD.swift */,
+				6B4FA7062306963700098DEE /* DHMediaTool.swift */,
+				6B4FA7052306963700098DEE /* DHAmplifyButton.swift */,
+				6B4FA7082306963700098DEE /* DHPlayerView.swift */,
+				6B4FA7092306963700098DEE /* DHPlayerConsolerView.swift */,
+				6B4FA7032306963600098DEE /* DHPlayerWrapView.swift */,
+				6B4FA7072306963700098DEE /* DHPlayerView+GestureRecognizer.swift */,
+				6B4FA6FF2306963500098DEE /* DHPlayerView+Obsever.swift */,
+				6B4FA7012306963600098DEE /* DHPlayerView+Screen.swift */,
+				6B4FA7022306963600098DEE /* DHPlayerViewDelegate.swift */,
+			);
+			path = demo;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -132,9 +197,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6B4FA6F5230694CE00098DEE /* Build configuration list for PBXNativeTarget "ZQVideoPlayer" */;
 			buildPhases = (
+				E0FEF48F506E53580FD9D290 /* [CP] Check Pods Manifest.lock */,
 				6B4FA6C92306941800098DEE /* Sources */,
 				6B4FA6CA2306941800098DEE /* Frameworks */,
 				6B4FA6CB2306941800098DEE /* Resources */,
+				D0B7EE3AB6A68361237866DC /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -251,13 +318,66 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		D0B7EE3AB6A68361237866DC /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ZQVideoPlayer/Pods-ZQVideoPlayer-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ZQVideoPlayer/Pods-ZQVideoPlayer-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ZQVideoPlayer/Pods-ZQVideoPlayer-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E0FEF48F506E53580FD9D290 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ZQVideoPlayer-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		6B4FA6C92306941800098DEE /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6B4FA7102306963800098DEE /* DHAmplifyButton.swift in Sources */,
+				6B4FA70E2306963800098DEE /* DHPlayerWrapView.swift in Sources */,
+				6B4FA7142306963800098DEE /* DHPlayerConsolerView.swift in Sources */,
+				6B4FA70A2306963800098DEE /* DHPlayerView+Obsever.swift in Sources */,
 				6B4FA6D32306941900098DEE /* ViewController.swift in Sources */,
+				6B4FA70D2306963800098DEE /* DHPlayerViewDelegate.swift in Sources */,
+				6B4FA7122306963800098DEE /* DHPlayerView+GestureRecognizer.swift in Sources */,
+				6B4FA7112306963800098DEE /* DHMediaTool.swift in Sources */,
 				6B4FA6D12306941900098DEE /* AppDelegate.swift in Sources */,
+				6B4FA7132306963800098DEE /* DHPlayerView.swift in Sources */,
+				6B4FA70F2306963800098DEE /* DHPlayerHUD.swift in Sources */,
+				6B4FA70C2306963800098DEE /* DHPlayerView+Screen.swift in Sources */,
+				6B4FA7312306975600098DEE /* DHConst.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -430,35 +550,45 @@
 		};
 		6B4FA6F6230694CE00098DEE /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 556B8F56BAB2EA276344EF57 /* Pods-ZQVideoPlayer.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = YV9823YP5R;
 				INFOPLIST_FILE = ZQVideoPlayer/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = CZQ.ZQVideoPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
 		6B4FA6F7230694CE00098DEE /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 24C897CB42295635A7E16BC2 /* Pods-ZQVideoPlayer.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = YV9823YP5R;
 				INFOPLIST_FILE = ZQVideoPlayer/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = CZQ.ZQVideoPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
