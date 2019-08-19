@@ -19,22 +19,6 @@ let kTabBarHeight:CGFloat  = DHConst.deviceTabBarHeight()
 let kNaviBarHeight:CGFloat = DHConst.deviceNaviBarHeight()
 let kStatusBarHeight:CGFloat = kNaviBarHeight - 44
 /**********************************************************************************************/
-/// 相对宽度（设计图）
-func W(_ width:CGFloat) -> CGFloat {
-    let  r = kWidth*1.0/750
-    return width*r
-}
-
-/// 相对高度（设计图）
-func H(_ height:CGFloat) -> CGFloat {
-    let  r = kHeight*1.0/1334
-    return height*r
-}
-/// 服务器域名
-let BASE_URL = "http://goo.seegif.com"
-/// 服务器域名
-let BASEIMAGE_URL = "http://goo.static.seegif.com/"
-
 
 /// MARK- 导航栏和容器栏
 struct  DHConst{

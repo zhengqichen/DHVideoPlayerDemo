@@ -16,3 +16,30 @@ class DHAmplifyButton: UIButton {
         return clickArea.contains(point)
     }
 }
+
+
+/*** 回调处理点击事件的 UIButton */
+class DHButton: UIButton {
+    typealias btnClickBlock = (UIButton)->Void
+    private var btnClick : btnClickBlock!
+
+    override  init(frame: CGRect) {
+        super.init(frame: frame)
+        addTarget(self, action: #selector(selfClick(_ : )), for: .touchUpInside)
+    }
+
+    @objc func selfClick(_ btn:UIButton) {
+        if self.btnClick != nil {
+            self.btnClick(self)
+        }
+    }
+    /** button点击事件*/
+    func dh_ButtonClick(_ btnClick:@escaping btnClickBlock){
+        self.btnClick = btnClick
+    }
+    
+   
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}

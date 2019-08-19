@@ -24,9 +24,9 @@ extension DHPlayerView:UIGestureRecognizerDelegate{
         // 点击手势
         let consoleTap = UITapGestureRecognizer(target: self, action: #selector(isShowConsolerView))
         addGestureRecognizer(consoleTap)
+
         // 滑动手势
         let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handleSwipeFrom(_ :)))
-        panRecognizer.delegate = self
         addGestureRecognizer(panRecognizer)
     }
     
@@ -35,10 +35,11 @@ extension DHPlayerView:UIGestureRecognizerDelegate{
         //如果没有播放，不响应事件
         if state != .playing || totalTimeSecounds == 0 {return}
         if consoleBar.isHidden {
-            slowConsoleBarView(time: 0.2)
+            slowConsoleBarView(time: 0.5)
             delayHideConsoleBar()
         }else{
-            hideConsoleBarView(time: 0.2)
+            if isDelayLocked {return}
+            hideConsoleBarView(time: 0.5)
         }
     }
     
@@ -77,7 +78,8 @@ extension DHPlayerView:UIGestureRecognizerDelegate{
                 }
                 break
             case .right,.left:
-                currentTime += TimeInterval(progressX*60)
+                // 左右滑动屏幕修改视频播放进度
+                currentTime += TimeInterval(progressX*changeProgresValue)
                 currentTime = max(currentTime, 0)
                 currentTime = min(currentTime, totalTimeSecounds)
                 changePlayerProgress(Float(currentTime))

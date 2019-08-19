@@ -25,6 +25,8 @@
 		6B4FA7132306963800098DEE /* DHPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B4FA7082306963700098DEE /* DHPlayerView.swift */; };
 		6B4FA7142306963800098DEE /* DHPlayerConsolerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B4FA7092306963700098DEE /* DHPlayerConsolerView.swift */; };
 		6B4FA7312306975600098DEE /* DHConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B4FA7302306975600098DEE /* DHConst.swift */; };
+		6B86512A230A449400BA3B4C /* DHVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B865129230A449400BA3B4C /* DHVideoViewController.swift */; };
+		6B86517C230AB28C00BA3B4C /* DHPlayerRateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B86517B230AB28C00BA3B4C /* DHPlayerRateView.swift */; };
 		D11A396239AAE5CE2212F5F6 /* Pods_ZQVideoPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5026F111BB4B4A0D3AE5F4BC /* Pods_ZQVideoPlayer.framework */; };
 /* End PBXBuildFile section */
 
@@ -73,6 +75,8 @@
 		6B4FA7082306963700098DEE /* DHPlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DHPlayerView.swift; sourceTree = "<group>"; };
 		6B4FA7092306963700098DEE /* DHPlayerConsolerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DHPlayerConsolerView.swift; sourceTree = "<group>"; };
 		6B4FA7302306975600098DEE /* DHConst.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DHConst.swift; sourceTree = "<group>"; };
+		6B865129230A449400BA3B4C /* DHVideoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DHVideoViewController.swift; sourceTree = "<group>"; };
+		6B86517B230AB28C00BA3B4C /* DHPlayerRateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DHPlayerRateView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,6 +150,7 @@
 				6B4FA6FE2306955C00098DEE /* demo */,
 				6B4FA6D02306941900098DEE /* AppDelegate.swift */,
 				6B4FA6D22306941900098DEE /* ViewController.swift */,
+				6B865129230A449400BA3B4C /* DHVideoViewController.swift */,
 				6B4FA6D42306941A00098DEE /* Main.storyboard */,
 				6B4FA6D7230694CB00098DEE /* Assets.xcassets */,
 				6B4FA6D9230694CB00098DEE /* LaunchScreen.storyboard */,
@@ -179,12 +184,13 @@
 				6B4FA7042306963600098DEE /* DHPlayerHUD.swift */,
 				6B4FA7062306963700098DEE /* DHMediaTool.swift */,
 				6B4FA7052306963700098DEE /* DHAmplifyButton.swift */,
+				6B86517B230AB28C00BA3B4C /* DHPlayerRateView.swift */,
 				6B4FA7082306963700098DEE /* DHPlayerView.swift */,
 				6B4FA7092306963700098DEE /* DHPlayerConsolerView.swift */,
 				6B4FA7032306963600098DEE /* DHPlayerWrapView.swift */,
-				6B4FA7072306963700098DEE /* DHPlayerView+GestureRecognizer.swift */,
 				6B4FA6FF2306963500098DEE /* DHPlayerView+Obsever.swift */,
 				6B4FA7012306963600098DEE /* DHPlayerView+Screen.swift */,
+				6B4FA7072306963700098DEE /* DHPlayerView+GestureRecognizer.swift */,
 				6B4FA7022306963600098DEE /* DHPlayerViewDelegate.swift */,
 			);
 			path = demo;
@@ -369,6 +375,8 @@
 				6B4FA70E2306963800098DEE /* DHPlayerWrapView.swift in Sources */,
 				6B4FA7142306963800098DEE /* DHPlayerConsolerView.swift in Sources */,
 				6B4FA70A2306963800098DEE /* DHPlayerView+Obsever.swift in Sources */,
+				6B86512A230A449400BA3B4C /* DHVideoViewController.swift in Sources */,
+				6B86517C230AB28C00BA3B4C /* DHPlayerRateView.swift in Sources */,
 				6B4FA6D32306941900098DEE /* ViewController.swift in Sources */,
 				6B4FA70D2306963800098DEE /* DHPlayerViewDelegate.swift in Sources */,
 				6B4FA7122306963800098DEE /* DHPlayerView+GestureRecognizer.swift in Sources */,

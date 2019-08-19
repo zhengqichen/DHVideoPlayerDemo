@@ -34,8 +34,7 @@ extension DHPlayerView {
             bufferDone()
         }
     }
-    
-    
+
     /// 准备播放
     func readyPaly(){
         //读取播放时长
@@ -81,8 +80,7 @@ extension DHPlayerView {
             let value = Float(currentTime/totalTimeSecounds)
             // 播放进度
             consoleBar.changeSliderProgress(value)
-            //底部进度条
-            bottomProgressView.progress = value
+
         }
     }
     
@@ -121,11 +119,13 @@ extension DHPlayerView {
     func slowConsoleBarView(time:TimeInterval) {
         consoleBar.isHidden = false
         UIView.animate(withDuration: time, animations: {
-            self.consoleBar.alpha = 1
-            //隐藏底部进度
-            self.bottomProgressView.isHidden = true
-        });
-        
+            if !self.fullScreenStatus{
+                self.consoleBar.alpha = 1
+
+            }else{
+                self.consoleBar.fullScreenShowConsolerView()
+            }
+        })
     }
     
     /// 渐隐控制视图
@@ -133,12 +133,17 @@ extension DHPlayerView {
     /// - Parameter time: 过渡时间
     ///   - view: 视图对象
     func hideConsoleBarView(time:TimeInterval) {
+        if isDelayLocked {return}
+        isDelayLocked = true
         UIView.animate(withDuration: time, animations: {
-            self.consoleBar.alpha = 0.0
+            if !self.fullScreenStatus{
+                self.consoleBar.alpha = 0.0
+            }else{
+                self.consoleBar.fullScreenHiddenConsolerView()
+            }
         }) { (r) in
             self.consoleBar.isHidden = true
-            //显示底部进度
-            self.bottomProgressView.isHidden = false
+            self.isDelayLocked =  false
         }
     }
     

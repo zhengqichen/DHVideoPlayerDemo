@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSCameraUsageDescription</key>
+	<string>App需要访问您相机,才能拍照上传头像或贴图哦</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>App需要访问您相机,才能拍照上传头像或贴图哦</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>

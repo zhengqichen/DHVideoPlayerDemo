@@ -77,21 +77,12 @@ extension DHPlayerView {
         UIView.animate(withDuration: 0.2, animations: {
             self.transform = CGAffineTransform.identity
             self.transform = CGAffineTransform(rotationAngle: rotaAngle)
-            //重置约束
-            self.snp.remakeConstraints({ (make) in
-                //将视图插入到顶层中心位置
-                make.centerX.equalToSuperview()
-                make.centerY.equalToSuperview()
-                //重新应用宽高
-                make.width.equalTo(keyWindow.bounds.height)
-                make.height.equalTo(keyWindow.bounds.width)
-            })
-            self.consoleBar.fullScreenLayout()
+            self.frame = CGRect(x: 0, y: 0, width: kWidth, height: kHeight)
+            self.consoleBar.frame = self.bounds
+            self.consoleBar.setFullScreenSubviewFrame()
         }) { (r) in
             self.fullScreenTiggerAfter()
-            self.consoleBar.titleLabelIsHidden(false)
         }
-        
     }
     
     
@@ -105,24 +96,15 @@ extension DHPlayerView {
             self.transform = CGAffineTransform.identity
             //恢复到原始角度
             self.transform = CGAffineTransform(rotationAngle: 0)
-            //重置约束
-            self.snp.remakeConstraints({ (make) in
-                //将视图插入到顶层中心位置
-                make.left.equalTo((self.originalBounds?.origin.x)!)
-                make.top.equalTo((self.originalBounds?.origin.y)!)
-                //重新应用宽高
-                make.width.equalTo((self.originalBounds?.width)!)
-                make.height.equalTo((self.originalBounds?.height)!)
-            })
-            self.consoleBar.normalScreenLayout()
+            self.frame = self.originalBounds!
+            self.consoleBar.frame = self.bounds
+            self.consoleBar.setNormalSubviewFrame()
         }) { (r) in
             //变更状态
             self.screenOrient = .portrait
             UIApplication.shared.statusBarOrientation = .portrait
             UIApplication.shared.statusBarStyle = .default
             self.fullScreenTiggerAfter()
-            //代理方法
-            self.consoleBar.titleLabelIsHidden(true)
         }
     }
 }

@@ -1,10 +1,11 @@
+
 //
 //  DHPlayerConsolerView.swift
 //  albatross
 //
 //  Created by 雷丹 on 2019/8/12.
 //  Copyright © 2019 CZQ. All rights reserved.
-//
+
 
 import UIKit
 import Kingfisher
@@ -21,6 +22,9 @@ protocol DHPlayerConsolerViewDelegate:class {
     /// 切换横竖屏按钮被点击
     func fullScreenBtnClick()
     
+    /// 修改播放速度
+    func rateButtonClick()
+    
     /// 滑动块滑动中事件
     func sliderTouchDown(_ slider:UISlider)
     
@@ -31,10 +35,11 @@ protocol DHPlayerConsolerViewDelegate:class {
 class DHPlayerConsolerView: UIView {
     
     //遮罩视图图像
-    private lazy var shadeImageView: UIImageView = {
+    private lazy var topShadeImageView: UIImageView = {
         let img = UIImage(named: "player_topshadow")
         let subview = UIImageView(image: img)
         subview.contentMode = .scaleToFill
+        subview.isUserInteractionEnabled = true
         return subview
     }()
     
@@ -46,12 +51,11 @@ class DHPlayerConsolerView: UIView {
         //设置标题、背景图像大小和位置
         subview.imageView?.contentMode = .left
         subview.setImage(UIImage(named: "player_back_filled"), for: UIControl.State.normal)
-        subview.backgroundColor = .red
         return subview
     }()
-
+    
     //标题label
-     private lazy var titleLabel:UILabel = {
+    private lazy var titleLabel:UILabel = {
         let subview = UILabel()
         subview.textColor = UIColor.white
         subview.font = UIFont.boldSystemFont(ofSize: 18)
@@ -59,7 +63,7 @@ class DHPlayerConsolerView: UIView {
     }()
     
     //封面
-     private lazy var posterImageView:UIImageView = {
+    private lazy var posterImageView:UIImageView = {
         let subview = UIImageView()
         //保持比例拉伸
         subview.clipsToBounds = true
@@ -70,7 +74,7 @@ class DHPlayerConsolerView: UIView {
     }()
     
     //加载动画视图
-     private lazy var loadIndicator:UIActivityIndicatorView = {
+    private lazy var loadIndicator:UIActivityIndicatorView = {
         //动画
         let subview = UIActivityIndicatorView(style: .white)
         subview.isHidden = true
@@ -78,7 +82,7 @@ class DHPlayerConsolerView: UIView {
     }()
     
     //播放&暂停按钮
-     private lazy var playButton:UIButton = {
+    private lazy var playButton:UIButton = {
         let subview = UIButton()
         subview.setImage(UIImage(named: "player_play_btn"), for: UIControl.State.normal)
         subview.imageEdgeInsets = UIEdgeInsets(top: 0, left: -25, bottom: 0, right: 0)
@@ -93,11 +97,13 @@ class DHPlayerConsolerView: UIView {
         subview.isHidden = true
         return subview
     }()
-    //控制条
-     private lazy var bottomBar:UIView = {
-        let subview:UIView = UIView()
-        subview.isHidden = true
-        subview.backgroundColor = UIColor.black.withAlphaComponent(0.42)
+    
+    //遮罩视图图像
+    private lazy var bottomShadeImageView: UIImageView = {
+        let img = UIImage(named: "player_bottomshadow")
+        let subview = UIImageView(image: img)
+        subview.contentMode = .scaleToFill
+        subview.isUserInteractionEnabled = true
         return subview
     }()
     
@@ -119,16 +125,16 @@ class DHPlayerConsolerView: UIView {
         return subview
     }()
     
-     //横屏切换按钮
-     private lazy var fullScreenButton:UIButton = {
+    //横屏切换按钮
+    private lazy var fullScreenButton:UIButton = {
         let subview = UIButton()
         subview.setImage(UIImage(named: "player_full_screen"), for: UIControl.State.normal)
         subview.imageEdgeInsets = UIEdgeInsets(top: 0, left: 25, bottom: 0, right: 0)
         return subview
     }()
     
-     //当前播放时长
-     private lazy var currDurationLabel:UILabel = {
+    //当前播放时长
+    private lazy var currDurationLabel:UILabel = {
         let subview = UILabel()
         subview.textColor = UIColor.white
         subview.text = "0:00"
@@ -137,7 +143,7 @@ class DHPlayerConsolerView: UIView {
         return subview
     }()
     
-     //总时长
+    //总时长
     private lazy var totalDurationLabel:UILabel = {
         let subview = UILabel()
         subview.text = "0:00"
@@ -145,151 +151,139 @@ class DHPlayerConsolerView: UIView {
         subview.font = UIFont.systemFont(ofSize: 11)
         return subview
     }()
-
-
+    
+    //总时长
+    private lazy var rateButton:UIButton = {
+        let subview = UIButton()
+        subview.setTitle("倍速", for: .normal)
+        subview.titleLabel?.font = UIFont.systemFont(ofSize: 11)
+        subview.layer.cornerRadius = 2
+        subview.layer.borderWidth = 1
+        subview.layer.borderColor = UIColor.white.cgColor
+        return subview
+    }()
+    
     weak var delegate:DHPlayerConsolerViewDelegate!
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(posterImageView)
-        addSubview(shadeImageView)
-        addSubview(titleLabel)
-        addSubview(backButton)
+        addSubview(topShadeImageView)
+        topShadeImageView.addSubview(titleLabel)
+        topShadeImageView.addSubview(backButton)
         addSubview(replayButton)
         addSubview(loadIndicator)
-        addSubview(bottomBar)
-        bottomBar.addSubview(playButton)
-        bottomBar.addSubview(currDurationLabel)
-        bottomBar.addSubview(slider)
-        bottomBar.addSubview(totalDurationLabel)
-        bottomBar.addSubview(fullScreenButton)
-        makeSubviewsConstraints()
+        addSubview(bottomShadeImageView)
+        bottomShadeImageView.addSubview(playButton)
+        bottomShadeImageView.addSubview(currDurationLabel)
+        bottomShadeImageView.addSubview(slider)
+        bottomShadeImageView.addSubview(totalDurationLabel)
+        bottomShadeImageView.addSubview(fullScreenButton)
+        setNormalSubviewFrame()
         backButton.addTarget(self, action: #selector(backButtonClick), for: .touchUpInside)
         playButton.addTarget(self, action: #selector(playButtonClick), for: .touchUpInside)
         replayButton.addTarget(self, action: #selector(replayButtonClick), for: .touchUpInside)
         fullScreenButton.addTarget(self, action: #selector(fullScreenBtnClick), for: .touchUpInside)
+        rateButton.addTarget(self, action: #selector(rateButtonClick), for: .touchUpInside)
         slider.addTarget(self, action: #selector(sliderTouchDown(_ :)), for: .touchDown)
         slider.addTarget(self, action: #selector(sliderTouchUpOut(_ :)), for: .touchUpOutside)
         slider.addTarget(self, action: #selector(sliderTouchUpOut(_ :)), for: .touchUpInside)
         slider.addTarget(self, action: #selector(sliderTouchUpOut(_ :)), for: .touchCancel)
     }
 
-   
-    
-
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-    
 }
 
 extension DHPlayerConsolerView{
     
-    func makeSubviewsConstraints(){
-        //封面
-        posterImageView.snp.makeConstraints { (make) in
-            make.left.top.equalToSuperview()
-            make.right.bottom.equalToSuperview()
-        }
-        
-        //遮罩图像
-        shadeImageView.snp.makeConstraints { (make) in
-            make.left.top.equalToSuperview()
-            make.right.bottom.equalToSuperview()
-        }
-        
-        //播放按钮
-        replayButton.snp.makeConstraints { (make) in
-            make.centerY.centerX.equalToSuperview()
-            make.width.height.equalTo(50)
-        }
-        //返回普通屏幕按钮
-        backButton.snp.makeConstraints { (make) in
-            make.left.equalTo(self).offset(kNaviBarHeight)
-            make.top.equalTo(self).offset(30)
-            make.height.equalTo(20)
-            make.width.equalTo(20)
-        }
-        
-        normalScreenLayout()
-        //加载动画
-        loadIndicator.snp.makeConstraints { (make) in
-            make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview()
-            make.width.height.equalTo(80)
-        }
-        
-        //控制条
-        bottomBar.snp.makeConstraints { (make) in
-            make.left.width.equalToSuperview()
-            make.bottom.equalToSuperview()
-            make.height.equalTo(30)
-        }
-        
-        //滑动块
-        slider.snp.makeConstraints { (make) in
-            make.left.equalToSuperview().offset(76)
-            make.right.equalToSuperview().offset(-76)
-            make.bottom.equalToSuperview().offset(-15)
-            make.height.equalTo(1)
-        }
-        
-        //播放按钮
-        playButton.snp.makeConstraints { (make) in
-            make.centerY.equalTo(slider)
-            make.left.equalToSuperview().offset(5)
-            make.width.equalTo(50)
-            make.height.equalTo(40)
-        }
-        
-        //当前播放时长
-        currDurationLabel.snp.makeConstraints { (make) in
-            make.centerY.equalTo(slider)
-            make.right.equalTo(slider.snp.left).offset(-10)
-            make.width.equalTo(50)
-        }
-        
-        //总时长
-        totalDurationLabel.snp.makeConstraints { (make) in
-            make.centerY.equalTo(slider)
-            make.left.equalTo(slider.snp.right).offset(10)
-            make.width.equalTo(50)
-        }
-        
-        //横屏切换
-        fullScreenButton.snp.makeConstraints { (make) in
-            make.centerY.equalTo(slider)
-            make.right.equalToSuperview().offset(-5)
-            make.width.equalTo(50)
-            make.height.equalTo(40)
-        }
-        
-    }
-    
-    /// 全屏布局
-    func fullScreenLayout(){
-        backButton.isHidden = false
-        //标题
-        titleLabel.snp.remakeConstraints { (make) in
-            make.left.equalTo(kNaviBarHeight+25)
-            make.right.equalTo(self).offset(-10)
-            make.top.equalTo(self).offset(30)
-        }
-    }
-    /// 普通窗口布局
-    func normalScreenLayout(){
+    // 退出全屏重设置frame
+    func setNormalSubviewFrame(){
+        topShadeImageView.addSubview(rateButton)
         backButton.isHidden = true
+        //封面
+        posterImageView.frame = bounds
+        var subframe = CGRect(x: 0, y: 0, width: frame.width, height: frame.height/2)
+        //遮罩图像1
+        topShadeImageView.frame = subframe
+        //播放按钮
+         subframe = CGRect(x: (frame.width-50)/2, y: (frame.height-50)/2, width: 50, height: 50)
+        replayButton.frame = subframe
         //标题
-        titleLabel.snp.remakeConstraints { (make) in
-            make.left.equalTo(self).offset(10)
-            make.right.equalTo(self).offset(-10)
-            make.top.equalTo(self).offset(10)
-        }
+        subframe = CGRect(x: 10, y: 10, width: frame.width-20, height: 30)
+        titleLabel.frame = subframe
+        //设置播放速度
+        subframe = CGRect(x: frame.width-45, y: 12.5, width: 35, height: 20)
+        rateButton.frame = subframe
+        //加载动画
+        loadIndicator.frame = bounds
+        //遮罩图像2
+        subframe = CGRect(x: 0, y: frame.height/2, width: frame.width, height: frame.height/2)
+        bottomShadeImageView.frame = subframe
+        //滑动块
+        subframe = CGRect(x: 76, y: bottomShadeImageView.frame.height-15, width: frame.width-152, height: 1)
+        slider.frame = subframe
+        //播放按钮
+        //滑动块
+        subframe = CGRect(x: 5, y: bottomShadeImageView.frame.height-35, width: 50, height: 40)
+        playButton.frame = subframe
+        //当前播放时长
+        subframe = CGRect(x: 16, y: bottomShadeImageView.frame.height-30, width: 50, height: 30)
+        currDurationLabel.frame = subframe
+        //总时长
+        subframe = CGRect(x:slider.frame.maxX + 10, y: bottomShadeImageView.frame.height-30, width: 50, height: 30)
+        totalDurationLabel.frame = subframe
+        //横屏切换
+        subframe = CGRect(x:frame.width - 55, y: bottomShadeImageView.frame.height-35, width: 50, height: 40)
+        fullScreenButton.frame = subframe
+    }
+    
+    // 全屏重设置frame
+    func setFullScreenSubviewFrame(){
+        bottomShadeImageView.addSubview(rateButton)
+        backButton.isHidden = false
+        //封面
+        posterImageView.frame = bounds
+        //遮罩图像1
+        topShadeImageView.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height/2)
+        //播放按钮
+        var subframe = CGRect(x: (frame.width-50)/2, y: (frame.height-50)/2, width: 50, height: 50)
+        replayButton.frame = subframe
+        //返回按钮
+        subframe = CGRect(x: kNaviBarHeight, y: 20, width: 50, height: 40)
+        backButton.frame = subframe
+        //标题
+        subframe = CGRect(x:kNaviBarHeight+40, y: 20, width: frame.width-kNaviBarHeight*2-50, height: 40)
+        titleLabel.frame = subframe
+        //加载动画
+        loadIndicator.frame = bounds
+        //遮罩图像2
+        subframe = CGRect(x: 0, y: frame.height/2, width: frame.width, height: frame.height/2)
+        bottomShadeImageView.frame = subframe
+        //滑动块
+        subframe = CGRect(x: kNaviBarHeight, y: bottomShadeImageView.frame.height-60, width: frame.width-kNaviBarHeight*2, height: 1)
+        slider.frame = subframe
+        //播放按钮
+        subframe = CGRect(x: kNaviBarHeight+5, y: bottomShadeImageView.frame.height-50, width: 50, height: 40)
+        playButton.frame = subframe
+        //当前播放时长
+        subframe = CGRect(x: kNaviBarHeight+5, y: bottomShadeImageView.frame.height-90, width: 50, height: 20)
+        currDurationLabel.frame = subframe
+        //总时长
+        subframe = CGRect(x:frame.width-kNaviBarHeight-55, y: bottomShadeImageView.frame.height-90, width: 50, height: 20)
+        totalDurationLabel.frame = subframe
+        //横屏切换
+        subframe = CGRect(x:frame.width - 55-kNaviBarHeight, y: bottomShadeImageView.frame.height-50, width: 50, height: 40)
+        fullScreenButton.frame = subframe
+        
+        //设置播放速度
+        subframe = CGRect(x: frame.width-kNaviBarHeight-100, y: bottomShadeImageView.frame.height-40, width: 35, height: 20)
+        rateButton.frame = subframe
     }
 }
 
 extension DHPlayerConsolerView{
-    
+
     /// 返回普通控制器
     @objc func backButtonClick()  {
         guard let delegate = delegate else {return}
@@ -302,11 +296,7 @@ extension DHPlayerConsolerView{
         delegate.playBtnClick()
     }
     
-    /// 暂停按钮被点击
-    @objc func replayButtonClick()  {
-        guard let delegate = delegate else {return}
-        delegate.replayButtonClick()
-    }
+    
     
     /// 切换横竖屏按钮被点击
     @objc func fullScreenBtnClick()  {
@@ -325,21 +315,37 @@ extension DHPlayerConsolerView{
         guard let delegate = delegate else {return}
         delegate.sliderTouchUpOut(slider)
     }
+    
+    /// 点击重播按钮
+    @objc func replayButtonClick()  {
+        guard let delegate = delegate else {return}
+        delegate.replayButtonClick()
+    }
+    
+    /// 修改播放速度
+    @objc func rateButtonClick()  {
+        guard let delegate = delegate else {return}
+        delegate.rateButtonClick()
+    }
 }
 
 extension DHPlayerConsolerView{
-   
+    
     /// 设置标题
     func setTitleLabel(text:String)  {
         titleLabel.text = text
     }
     
-    /// 设置封面
+    /// 设置封面(网络)
     func setPosterImageView(imagePath:String)  {
         guard let url = URL.init(string: imagePath) else {return}
         posterImageView.kf.setImage(with: url)
     }
     
+    /// 设置封面(本地)
+    func setPosterImageView(image:UIImage)  {
+        posterImageView.image = image
+    }
     /// 更换播放按钮状态图标
     func changePlayButton(imageName:String)  {
         playButton.setImage(UIImage.init(named: imageName), for: .normal)
@@ -350,7 +356,7 @@ extension DHPlayerConsolerView{
         fullScreenButton.setImage(UIImage.init(named: imageName), for: .normal)
     }
     
-    /// 设置总时间
+    /// 设置总时长
     func changeTotalDurationLabel(text:String)  {
         totalDurationLabel.text = text
     }
@@ -377,7 +383,7 @@ extension DHPlayerConsolerView{
     
     /// 隐藏/显示bottomBar
     func bottomBarIsHidden(_ hidden:Bool)  {
-        bottomBar.isHidden = hidden
+        bottomShadeImageView.isHidden = hidden
     }
     
     /// 隐藏/显示全屏按钮
@@ -403,5 +409,19 @@ extension DHPlayerConsolerView{
     /// 关闭加载动画
     func loadIndicatorStopAnimating()  {
         loadIndicator.stopAnimating()
+    }
+}
+extension DHPlayerConsolerView{
+
+    // 全屏模式下显示操作面板
+    func fullScreenShowConsolerView()  {
+        topShadeImageView.transform = .identity
+        bottomShadeImageView.transform = .identity
+    }
+    
+    // 全屏模式下隐藏操作面板
+    func fullScreenHiddenConsolerView()  {
+        topShadeImageView.transform = CGAffineTransform(translationX: 0, y: -frame.height/2)
+        bottomShadeImageView.transform = CGAffineTransform(translationX: 0, y: frame.height/2)
     }
 }
