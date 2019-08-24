@@ -8,7 +8,9 @@
 
 import UIKit
 
-class DHVideoViewController: UIViewController,DHPlayerWrapDelegate{
+class DHVideoViewController: UIViewController{
+    
+    
     
     /**播放器包围*/
     lazy var wrapView:DHPlayerWrapView = {
@@ -47,12 +49,7 @@ class DHVideoViewController: UIViewController,DHPlayerWrapDelegate{
     func setResourceDataForLocation(resource:URL,title:String?,posterImage:UIImage?){
         wrapView.setResourceDataForLocation(resource: resource, title: title, posterImage: posterImage)
     }
-    
-    
 
-    /// 当播放时触发
-    func onPlay(wrap: DHPlayerWrapView) {}
-    
     /// 用于根据全屏切换状态栏样式
     override var preferredStatusBarStyle: UIStatusBarStyle {
         if self.playerFullScreen{
@@ -69,13 +66,27 @@ class DHVideoViewController: UIViewController,DHPlayerWrapDelegate{
         //释放播放器
         wrapView.player.stop()
     }
-    
-    
+
     @objc func didmissButClick()  {
         self.dismiss(animated: true, completion: nil)
     }
+}
 
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        wrapView.setRate(2.0)
+extension DHVideoViewController:DHPlayerWrapDelegate{
+    /// 当播放时触发
+    func onPlay() {
+        
+    }
+    /// 当播放暂停
+    func onPause() {
+        
+    }
+    /// 当播放停止
+    func onStop() {
+        
+    }
+    /// 当播放出错
+    func onError() {
+        
     }
 }

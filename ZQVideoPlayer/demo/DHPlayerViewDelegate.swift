@@ -33,9 +33,24 @@ protocol DHPlayerViewDelegate:NSObjectProtocol {
 
 /// 包装层代理
 protocol DHPlayerWrapDelegate: NSObjectProtocol {
-    /// 当播放时触发
+
+    /// 当视频播放时
     ///
-    /// - Parameter wrap: wrap description
-    func onPlay(wrap:DHPlayerWrapView)
+    /// - Parameter player: player description
+    func onPlay()
     
+    /// 当播放被暂停
+    ///
+    /// - Parameter player: player description
+    func onPause()
+    
+    /// 当播放被停止
+    ///
+    /// - Parameter player: player description
+    func onStop()
+    
+    /// 当视频播放出现错误
+    ///
+    /// - Parameter player: player description
+    func onError()
 }

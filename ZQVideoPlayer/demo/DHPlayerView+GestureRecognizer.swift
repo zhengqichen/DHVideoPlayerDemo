@@ -1,10 +1,12 @@
-//
+
+
+
 //  DHPlayerView+GestureRecognizer.swift
 //  albatross
 //
 //  Created by 雷丹 on 2019/8/14.
 //  Copyright © 2019 CZQ. All rights reserved.
-//
+
 
 import UIKit
 import MediaPlayer
@@ -18,7 +20,7 @@ enum Direction {
 
 
 extension DHPlayerView:UIGestureRecognizerDelegate{
-    
+
     /// 添加手势
     func addGestureRecognizer()  {
         // 点击手势
@@ -29,20 +31,19 @@ extension DHPlayerView:UIGestureRecognizerDelegate{
         let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handleSwipeFrom(_ :)))
         addGestureRecognizer(panRecognizer)
     }
-    
+
     /// 控制台隐藏或显示
     @objc func isShowConsolerView(){
+        print("isShowConsolerView")
         //如果没有播放，不响应事件
         if state != .playing || totalTimeSecounds == 0 {return}
         if consoleBar.isHidden {
             slowConsoleBarView(time: 0.5)
-            delayHideConsoleBar()
         }else{
-            if isDelayLocked {return}
             hideConsoleBarView(time: 0.5)
         }
     }
-    
+
     @objc func handleSwipeFrom(_ gesture:UIPanGestureRecognizer)  {
         /// 记录滑动手势的变换
         let translation = gesture.translation(in: self)
@@ -50,7 +51,6 @@ extension DHPlayerView:UIGestureRecognizerDelegate{
         let progressX = translation.x / gesture.view!.bounds.width
         /// 手势在Y轴上的滑动进度
         let progressY = translation.y / gesture.view!.bounds.height
-        
         // 获取屏幕窗口
         let keyWindow = UIApplication.shared.keyWindow!
         if gesture.state == .began {
@@ -73,8 +73,8 @@ extension DHPlayerView:UIGestureRecognizerDelegate{
                     DHPlayerHUD.showVolume(progress: CGFloat(volumeViewSlider!.value), superview:fullScreenStatus ? keyWindow:self,fullScreenStatus:fullScreenStatus )
                 }else{
                     // 滑动右边屏幕修改亮度
-                  UIScreen.main.brightness = brightness - progressY
-                  DHPlayerHUD.showBrightness(progress: CGFloat(UIScreen.main.brightness), superview: fullScreenStatus ? keyWindow:self,fullScreenStatus:fullScreenStatus)
+                    UIScreen.main.brightness = brightness - progressY
+                    DHPlayerHUD.showBrightness(progress: CGFloat(UIScreen.main.brightness), superview: fullScreenStatus ? keyWindow:self,fullScreenStatus:fullScreenStatus)
                 }
                 break
             case .right,.left:
@@ -92,7 +92,7 @@ extension DHPlayerView:UIGestureRecognizerDelegate{
             DHPlayerHUD.hidden(superview: fullScreenStatus ? keyWindow:self)
         }
     }
-    
+
     /// 计算手势方向
     func determineCameraDirectionIfNeeded(translation:CGPoint) -> Direction {
         let gestureMinimumTranslation:CGFloat = 20.0
@@ -138,17 +138,17 @@ extension DHPlayerView:UIGestureRecognizerDelegate{
 }
 
 extension DHPlayerView{
-    
+
     /// 获取屏幕亮度
     func getBrightness() -> CGFloat {
         return UIScreen.main.brightness
     }
-    
+
     /// 获取视频音量
     func getVolume() -> CGFloat {
         return CGFloat(volumeViewSlider.value)
     }
-    
+
     /// 获取当前模仿时间
     func getCurrentDuration() -> CGFloat {
         return CGFloat(CMTimeGetSeconds(avplayer.currentItem!.duration))

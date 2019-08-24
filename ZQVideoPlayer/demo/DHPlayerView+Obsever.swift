@@ -6,6 +6,13 @@
 //  Copyright © 2019 CZQ. All rights reserved.
 //
 
+//  DHPlayerView+Obsever.swift
+//  albatross
+//
+//  Created by 雷丹 on 2019/8/12.
+//  Copyright © 2019 CZQ. All rights reserved.
+
+
 import Foundation
 import AVFoundation
 import UIKit
@@ -46,7 +53,7 @@ extension DHPlayerView {
             debugPrint("------------- 从\(seekTime)继续播放 ------------------")
         }
     }
-    
+
     /// 更新缓冲进度
     func updateBufferProgress(){
         let bufferedRanges = playerItem?.loadedTimeRanges
@@ -59,15 +66,14 @@ extension DHPlayerView {
         let value = Float(timeInterval)/Float(totalDuration)
         print("已缓冲：\(value)")
     }
-    
+
     //显示总时长
     private func readTotalDuration(){
         totalTimeSecounds = TimeInterval(playerItem.duration.value) / TimeInterval(playerItem.duration.timescale);
         let totalStr = formatPlayTime(secounds: totalTimeSecounds)
         consoleBar.changeTotalDurationLabel(text: totalStr)
     }
-    
-    
+
     /// 更新进度
     @objc func updateSchedule(){
         //计算当前播放时间
@@ -76,15 +82,15 @@ extension DHPlayerView {
         consoleBar.changeCurrDurationLabel(text: timeStr)
         // 滑动不在滑动的时候
         if !sliding{
-
             let value = Float(currentTime/totalTimeSecounds)
             // 播放进度
             consoleBar.changeSliderProgress(value)
 
         }
+        readTotalDuration()
     }
-    
-    //    格式化时间字符串
+
+    ///  格式化时间字符串
     private func formatPlayTime(secounds:TimeInterval)->String{
         if secounds.isNaN{return "00:00"}
         let m = Int(secounds / 60)
@@ -92,7 +98,7 @@ extension DHPlayerView {
         let str = String(format: "%02d:%02d", m, s)
         return str
     }
-    
+
     /// 滑动块释放事件
     ///
     /// - Parameter slider: slider description
@@ -111,7 +117,7 @@ extension DHPlayerView {
             })
         }
     }
-    
+
     /// 渐显控制视图
     ///
     /// - Parameter time: 过渡时间
@@ -119,37 +125,38 @@ extension DHPlayerView {
     func slowConsoleBarView(time:TimeInterval) {
         consoleBar.isHidden = false
         UIView.animate(withDuration: time, animations: {
-            if !self.fullScreenStatus{
-                self.consoleBar.alpha = 1
-
-            }else{
+            self.consoleBar.alpha = 1
+            if self.fullScreenStatus{
                 self.consoleBar.fullScreenShowConsolerView()
+            }else{
+                
             }
-        })
+        }) { (finish) in
+            self.setConsoleBarTimer()
+        }
     }
-    
+
     /// 渐隐控制视图
     ///
     /// - Parameter time: 过渡时间
     ///   - view: 视图对象
     func hideConsoleBarView(time:TimeInterval) {
-        if isDelayLocked {return}
-        isDelayLocked = true
+        if avplayer == nil {return}
         UIView.animate(withDuration: time, animations: {
-            if !self.fullScreenStatus{
-                self.consoleBar.alpha = 0.0
-            }else{
+            if self.fullScreenStatus{
                 self.consoleBar.fullScreenHiddenConsolerView()
+            }else{
+                self.consoleBar.alpha = 0
             }
         }) { (r) in
             self.consoleBar.isHidden = true
-            self.isDelayLocked =  false
+            self.consoleBarTimeOffTimer()
         }
     }
-    
-    
+
+
+
     /// 当视频缓冲中，暂停播放
-    ///
     func buffering(){
         debugPrint("缓冲中")
         if state == .playing {
@@ -157,49 +164,63 @@ extension DHPlayerView {
             pause()
             state = .bufferPause
             //显示动画
-//            consoleBar.playButtonIsHidden(true)
             consoleBar.loadIndicatorStartAnimating()
         }
     }
-    
+
     /// 当视频缓冲到可以继续播放时
-    ///
     func bufferDone(){
         debugPrint("缓冲完成，可以播放")
-        if isSceneTransition {
-            //完成初始化播放缓冲
-            finishSceneTransition()
-        }
+        //完成初始化播放缓冲
+       finishSceneTransition()
         //隐藏动画
         consoleBar.loadIndicatorStopAnimating()
-//        consoleBar.playButtonIsHidden(false)
         if state == .bufferPause {
             play()
         }
+        consoleBar.rateButtonIsHidden(false)
+        consoleBar.titleLabelIsHidden(false)
     }
-    
+
     /// 初始化应用场景过渡，此方法
     func initSceneTransition(){
-        if initPlayStatus {return}
-        //打标记，避免被重复执行
-        initPlayStatus = true
-        isSceneTransition = true
         consoleBar.posterImageViewIsHidden(false)
         //显示加载动画和封面
-//        consoleBar.playButtonIsHidden(true)
         consoleBar.loadIndicatorStopAnimating()
     }
-    
-    
+
     /// 待准备完成后，开始缓冲播放，应用此方法
     func finishSceneTransition(){
-        isSceneTransition = false
-//        consoleBar.playButtonIsHidden(false)
         consoleBar.loadIndicatorStopAnimating()
         //隐藏封面
         consoleBar.posterImageViewIsHidden(true)
         //直接隐藏控制面板
         hideConsoleBarView(time: 0.2)
-        
+    }
+}
+
+///// MARK - 控制版面计时器
+extension DHPlayerView{
+    func setConsoleBarTimer()  {
+        consoleBarTimeInterval = 0
+        if consoleBarTimer == nil {
+            consoleBarTimer = Timer.scheduledTimer(timeInterval: 1.0,target: self,selector: #selector(consoleBarTimerRuning),userInfo: nil,repeats: true)
+        }
+    }
+    /// 计时器跑起来
+    @objc func consoleBarTimerRuning(){
+        consoleBarTimeInterval += 1
+        if consoleBarTimeInterval >= 3{
+            hideConsoleBarView(time: 0.5)
+            if self.state != .playing {return}
+            consoleBarTimeOffTimer()
+        }
+    }
+
+    /// 关闭定时器
+    func consoleBarTimeOffTimer()  {
+        guard let timer = consoleBarTimer else{ return }
+        timer.invalidate()
+        self.consoleBarTimer = nil
     }
 }

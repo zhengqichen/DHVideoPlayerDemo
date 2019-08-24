@@ -137,7 +137,7 @@ class DHPlayerConsolerView: UIView {
     private lazy var currDurationLabel:UILabel = {
         let subview = UILabel()
         subview.textColor = UIColor.white
-        subview.text = "0:00"
+        subview.text = "00:00"
         subview.textAlignment = .right
         subview.font = UIFont.systemFont(ofSize: 11)
         return subview
@@ -146,15 +146,15 @@ class DHPlayerConsolerView: UIView {
     //总时长
     private lazy var totalDurationLabel:UILabel = {
         let subview = UILabel()
-        subview.text = "0:00"
+        subview.text = "00:00"
         subview.textColor = UIColor.white
         subview.font = UIFont.systemFont(ofSize: 11)
         return subview
     }()
     
     //总时长
-    private lazy var rateButton:UIButton = {
-        let subview = UIButton()
+    private lazy var rateButton:DHAmplifyButton = {
+        let subview = DHAmplifyButton()
         subview.setTitle("倍速", for: .normal)
         subview.titleLabel?.font = UIFont.systemFont(ofSize: 11)
         subview.layer.cornerRadius = 2
@@ -221,18 +221,19 @@ extension DHPlayerConsolerView{
         subframe = CGRect(x: 0, y: frame.height/2, width: frame.width, height: frame.height/2)
         bottomShadeImageView.frame = subframe
         //滑动块
-        subframe = CGRect(x: 76, y: bottomShadeImageView.frame.height-15, width: frame.width-152, height: 1)
+        subframe = CGRect(x: 76, y: bottomShadeImageView.frame.height-30, width: frame.width-152, height: 30)
         slider.frame = subframe
         //播放按钮
-        //滑动块
         subframe = CGRect(x: 5, y: bottomShadeImageView.frame.height-35, width: 50, height: 40)
         playButton.frame = subframe
         //当前播放时长
         subframe = CGRect(x: 16, y: bottomShadeImageView.frame.height-30, width: 50, height: 30)
         currDurationLabel.frame = subframe
+        currDurationLabel.textAlignment = .right
         //总时长
         subframe = CGRect(x:slider.frame.maxX + 10, y: bottomShadeImageView.frame.height-30, width: 50, height: 30)
         totalDurationLabel.frame = subframe
+        totalDurationLabel.textAlignment = .left
         //横屏切换
         subframe = CGRect(x:frame.width - 55, y: bottomShadeImageView.frame.height-35, width: 50, height: 40)
         fullScreenButton.frame = subframe
@@ -261,7 +262,7 @@ extension DHPlayerConsolerView{
         subframe = CGRect(x: 0, y: frame.height/2, width: frame.width, height: frame.height/2)
         bottomShadeImageView.frame = subframe
         //滑动块
-        subframe = CGRect(x: kNaviBarHeight, y: bottomShadeImageView.frame.height-60, width: frame.width-kNaviBarHeight*2, height: 1)
+        subframe = CGRect(x: kNaviBarHeight, y: bottomShadeImageView.frame.height-75, width: frame.width-kNaviBarHeight*2, height: 30)
         slider.frame = subframe
         //播放按钮
         subframe = CGRect(x: kNaviBarHeight+5, y: bottomShadeImageView.frame.height-50, width: 50, height: 40)
@@ -269,9 +270,11 @@ extension DHPlayerConsolerView{
         //当前播放时长
         subframe = CGRect(x: kNaviBarHeight+5, y: bottomShadeImageView.frame.height-90, width: 50, height: 20)
         currDurationLabel.frame = subframe
+        currDurationLabel.textAlignment = .left
         //总时长
         subframe = CGRect(x:frame.width-kNaviBarHeight-55, y: bottomShadeImageView.frame.height-90, width: 50, height: 20)
         totalDurationLabel.frame = subframe
+        totalDurationLabel.textAlignment = .right
         //横屏切换
         subframe = CGRect(x:frame.width - 55-kNaviBarHeight, y: bottomShadeImageView.frame.height-50, width: 50, height: 40)
         fullScreenButton.frame = subframe
@@ -295,9 +298,7 @@ extension DHPlayerConsolerView{
         guard let delegate = delegate else {return}
         delegate.playBtnClick()
     }
-    
-    
-    
+
     /// 切换横竖屏按钮被点击
     @objc func fullScreenBtnClick()  {
         guard let delegate = delegate else {return}
@@ -358,7 +359,9 @@ extension DHPlayerConsolerView{
     
     /// 设置总时长
     func changeTotalDurationLabel(text:String)  {
-        totalDurationLabel.text = text
+        if  totalDurationLabel.text == "00:00"  {
+            totalDurationLabel.text = text
+        }
     }
     
     /// 设置进度时间
@@ -409,6 +412,11 @@ extension DHPlayerConsolerView{
     /// 关闭加载动画
     func loadIndicatorStopAnimating()  {
         loadIndicator.stopAnimating()
+    }
+    
+    /// 显示，隐藏播放倍速按钮
+    func rateButtonIsHidden(_ hidden:Bool)  {
+        rateButton.isHidden = hidden
     }
 }
 extension DHPlayerConsolerView{

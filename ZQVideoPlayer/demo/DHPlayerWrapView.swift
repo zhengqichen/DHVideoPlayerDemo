@@ -74,6 +74,7 @@ class DHPlayerWrapView: UIView,DHPlayerViewDelegate  {
 
     /// 当视频播放出现错误
     func onError(player: DHPlayerView) {
+        wrapDelegate?.onError()
         if player.resource_url != nil {
             DHMediaTool.shared.remove(ident: player.resource_url!.absoluteString)
         }
@@ -81,11 +82,12 @@ class DHPlayerWrapView: UIView,DHPlayerViewDelegate  {
 
     /// 当播放被暂停
     func onPause(player: DHPlayerView) {
-
+        wrapDelegate?.onPause()
     }
 
     /// 当播放被停止
     func onStop(player: DHPlayerView) {
+        wrapDelegate?.onStop()
         if player.resource_url != nil {
             //当视频停止播放，记录播放当前时间
             DHMediaTool.shared.record(ident:player.resource_url!.absoluteString, current: player.currentTime, total: player.totalTimeSecounds)
@@ -94,7 +96,7 @@ class DHPlayerWrapView: UIView,DHPlayerViewDelegate  {
 
     /// 当视频播放时
     func onPlay(player: DHPlayerView) {
-        wrapDelegate?.onPlay(wrap: self)
+        wrapDelegate?.onPlay()
         //尝试继续播放
         let ctime = DHMediaTool.shared.lastBreakTime(ident: player.resource_url!.absoluteString)
         if ctime != -1 {
@@ -104,13 +106,9 @@ class DHPlayerWrapView: UIView,DHPlayerViewDelegate  {
 
     /// 尝试暂停当前播放资源
     func tryPause(){
+        
         if player.state != .stop {
             player.pause()
         }
-    }
-
-    /// 设置播放速度
-    func setRate(_ rate:Float){
-       player.setRate(rate)
     }
 }

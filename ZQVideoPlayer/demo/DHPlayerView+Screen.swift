@@ -9,12 +9,12 @@
 import UIKit
 
 extension DHPlayerView {
-    
+
     //全屏视图切换按钮事件
     @objc func fullScreenBtnEvent(){
         fullScreenStatus ? quitFullScreen():fullScreen(isLeft: true)
     }
-    
+
     /// 切换全屏视图后调用事件
     @objc func fullScreenTiggerAfter() {
         if fullScreenStatus {
@@ -45,8 +45,7 @@ extension DHPlayerView {
             break
         }
     }
-    
-    
+
     /// 旋转屏幕并全屏
     ///
     /// - Parameter isLeft: 如果为left方向旋转，参数为true,否则为false
@@ -55,7 +54,6 @@ extension DHPlayerView {
             return
         }
         originalBounds = self.frame
-        let keyWindow = UIApplication.shared.keyWindow!
         var rotaAngle = CGFloat(Double.pi/2)
         if isLeft {
             //变更状态
@@ -72,6 +70,8 @@ extension DHPlayerView {
         //移除原始视图
         removeFromSuperview()
         //添加播放器视图
+        // 获取屏幕窗口
+        let keyWindow = UIApplication.shared.keyWindow!
         keyWindow.addSubview(self)
         //动画
         UIView.animate(withDuration: 0.2, animations: {
@@ -84,8 +84,8 @@ extension DHPlayerView {
             self.fullScreenTiggerAfter()
         }
     }
-    
-    
+
+
     //退出全屏
     func quitFullScreen(){
         if (screenOrient != .landscapeLeft) && (screenOrient != .landscapeRight) {return}
@@ -99,6 +99,7 @@ extension DHPlayerView {
             self.frame = self.originalBounds!
             self.consoleBar.frame = self.bounds
             self.consoleBar.setNormalSubviewFrame()
+            DHPlayerRateView.hidden(superview: self)
         }) { (r) in
             //变更状态
             self.screenOrient = .portrait
@@ -108,3 +109,4 @@ extension DHPlayerView {
         }
     }
 }
+

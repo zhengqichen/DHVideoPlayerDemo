@@ -1,4 +1,3 @@
-
 //
 //  DHPlayerView.swift
 //  albatross
@@ -42,20 +41,13 @@ class DHPlayerView: UIView {
     var link:CADisplayLink!
     //网络路径
     var resource_url:URL?
-
     //滑动块交互中
     var sliding:Bool = false
-    //是否应用了场景过渡
-    var isSceneTransition:Bool = false
-    //初始化播放计数
-    var initPlayStatus:Bool = false
     //是否全屏
     var fullScreenStatus:Bool = false
     //是否准备好了组件
     var isReadyCombin:Bool = false
-    //跟踪器添加状态
-    var isTrack:Bool = false
-
+    
     //当前屏幕方向，默认为竖向正常
     var screenOrient:UIDeviceOrientation = .portrait
     // 播放器父view
@@ -64,7 +56,6 @@ class DHPlayerView: UIView {
     var originalBounds:CGRect?
     //开始播放时指定的时间
     var beginSeekTime:TimeInterval = -1
-
     // 是否正在修改音量
     var isChangeVolume:Bool!
     //  手势滑动方向
@@ -79,19 +70,27 @@ class DHPlayerView: UIView {
     var volume:CGFloat = 0
     // 滑动屏幕快进/快退的增量
     var changeProgresValue:CGFloat = 30
+    
+    // 物理音量键计时器
+    var volumeTimer:Timer!
+    var timeInterval = -1
+    
+    // 控制面板计时器
+    var consoleBarTimer:Timer!
+    var consoleBarTimeInterval = 0
+    
     //控制面板
     lazy var consoleBar : DHPlayerConsolerView = {
         let subview = DHPlayerConsolerView(frame: bounds)
         return subview
     }()
-
+    
     //播放器视图
     lazy var playerView:UIView = {
         let subview = UIView()
         return subview
     }()
-
-
+    
     //  懒加载音量控件
     lazy var volumeView:MPVolumeView = {
         let volumeView:MPVolumeView = MPVolumeView(frame: CGRect(x: -1111, y: -1000, width: 11, height: 11))
@@ -103,6 +102,7 @@ class DHPlayerView: UIView {
         }
         return volumeView
     }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         //构建控制面板
@@ -111,8 +111,9 @@ class DHPlayerView: UIView {
         addSubview(consoleBar)
         addSubview(volumeView)
         addGestureRecognizer()
+        volumeViewSlider.addTarget(self, action: #selector(volumeViewSliderValueChanged(_ :)), for: .valueChanged)
     }
-
+    
     /// 执行初始播放
     @objc func initPlay(){
         initSceneTransition()
@@ -120,22 +121,11 @@ class DHPlayerView: UIView {
         tracking()
         play()
     }
-
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    //标注正在执行状态
-    var isDelayLocked:Bool = false
-    /// 延迟隐藏控制条
-    func delayHideConsoleBar(){
-        //2秒后隐藏面板
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+10) {
-            if self.state != .playing {return}
-            //隐藏面板
-            self.hideConsoleBarView(time: 0.5)
-        }
-    }
-
+    
     /// 搭建播放器
     func combineFrame(){
         if isReadyCombin {return}
@@ -144,51 +134,95 @@ class DHPlayerView: UIView {
         playerItem = AVPlayerItem(url: resource_url!)
         avplayer = AVPlayer(playerItem: playerItem)
         playerLayer = AVPlayerLayer(player: avplayer)
-        avplayer.rate = 2.0
         //设置模式
         playerLayer.videoGravity = AVLayerVideoGravity.resizeAspect
         playerLayer.contentsScale = UIScreen.main.scale
-
         //播放器视图
         insertSubview(playerView, belowSubview: consoleBar)
         playerView.layer.insertSublayer(playerLayer, at: 0)
         layer.insertSublayer(playerLayer, at: 0)
     }
-
+    
     /// 播放出错通知
     @objc func backStalledNotice(){
         debugPrint("播放出错")
     }
-
+    
     /// 播放完成通知
     @objc func toEndTimeNotice(){
         debugPrint("播放完成了")
         stop()
         //变更播放按钮图像
         consoleBar.replayButtonIsHidden(false)
+        consoleBar.titleLabelIsHidden(true)
+        consoleBar.rateButtonIsHidden(true)
+        //
+        // 获取屏幕窗口
+        let keyWindow = UIApplication.shared.keyWindow!
+        DHPlayerHUD.hidden(superview: fullScreenStatus ? keyWindow:self)
+        /// 播放完成 关闭计时器
+        consoleBarTimeOffTimer()
     }
-
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         playerLayer?.frame = bounds
     }
-
+    
     deinit {
         releaseTrack()
     }
 }
 
+/// MARK - 物理音量键调节音量时实时更新自定义音量进度条
+extension DHPlayerView{
+    @objc func volumeViewSliderValueChanged(_ slider:UISlider)  {
+        if timeInterval == -1 {
+            timeInterval = 0
+            return
+        }
+        timeInterval = 0
+        // 获取屏幕窗口
+        let keyWindow = UIApplication.shared.keyWindow!
+        DHPlayerHUD.showVolume(progress: CGFloat(volumeViewSlider!.value), superview:fullScreenStatus ? keyWindow:self,fullScreenStatus:fullScreenStatus )
+        if volumeTimer == nil {
+            /// 计时器，监听是否在用物理音量键修改音量
+            volumeTimer = Timer.scheduledTimer(timeInterval: 1.0,target: self,selector: #selector(volumeTimerRuning),userInfo: nil,repeats: true)
+        }
+    }
+    
+    /// 计时器跑起来
+    @objc func volumeTimerRuning(){
+        timeInterval += 1
+        /// 当音量超过2秒没有变化后，删除显示音量的进度条
+        if timeInterval >= 2{
+            // 获取屏幕窗口
+            let keyWindow = UIApplication.shared.keyWindow!
+            DHPlayerHUD.hidden(superview: fullScreenStatus ? keyWindow:self)
+            volumeOffTimer()
+        }
+    }
+    
+    /// 关闭定时器
+    func volumeOffTimer()  {
+        guard let timer = volumeTimer else{ return }
+        timer.invalidate()
+        self.volumeTimer = nil
+    }
+}
+
+/// MARK - 修改控制面板
 extension DHPlayerView{
     /// 跳转到指定位置
     func seek(time:TimeInterval){
         beginSeekTime = time
     }
-
+    
     /// 添加资源
     func setResourceUrl(url:URL)  {
         resource_url = url
     }
-
+    
     /// 设置封面（网络）
     func setPosterImage(imagePath:String)  {
         consoleBar.setPosterImageView(imagePath: imagePath)
@@ -198,26 +232,24 @@ extension DHPlayerView{
     func setPosterImage(image:UIImage)  {
         consoleBar.setPosterImageView(image: image)
     }
-
+    
     /// 设置标题
     func setTitle(title:String)  {
         consoleBar.setTitleLabel(text: title)
     }
-
+    
     /// 设置播放速度
     func setRate(_ rate:Float){
         if let avplayer = avplayer{
-         avplayer.rate = rate
+            avplayer.rate = rate
         }
     }
 }
 
-/// 跟踪
+/// MARK - 跟踪
 extension DHPlayerView{
     //执行播放跟踪
     private func tracking(){
-        if isTrack {return}
-        isTrack = true
         //监听缓冲进度改变
         playerItem.addObserver(self, forKeyPath: "status", options: NSKeyValueObservingOptions.new, context: nil)
         playerItem.addObserver(self, forKeyPath: "loadedTimeRanges", options: NSKeyValueObservingOptions.new, context: nil)
@@ -226,7 +258,7 @@ extension DHPlayerView{
         //监视器配置
         link = CADisplayLink(target: self, selector: #selector(updateSchedule))
         link.add(to: RunLoop.main, forMode: RunLoop.Mode.default)
-
+        //
         noticeCenter.addObserver(self, selector: #selector(toEndTimeNotice), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: playerItem)
         noticeCenter.addObserver(self, selector: #selector(backStalledNotice), name: NSNotification.Name.AVPlayerItemPlaybackStalled, object: playerItem)
         //监听屏幕旋转
@@ -234,11 +266,10 @@ extension DHPlayerView{
         // 监听app 进入后台 返回前台的通知
         noticeCenter.addObserver(self, selector: #selector(pause), name: UIApplication.willResignActiveNotification, object: nil)
     }
-
+    
     /// 释放跟踪
     private func releaseTrack(){
-        if !isTrack {return}
-        isTrack = false
+        if avplayer == nil {return}
         debugPrint(">>> 释放资源")
         playerItem.cancelPendingSeeks()
         playerItem.asset.cancelLoading()
@@ -261,13 +292,12 @@ extension DHPlayerView{
         avplayer = nil
         //将状态标识为未准备好
         isReadyCombin = false
-        initPlayStatus = false
     }
 }
 
 /// MARK - 改变播放状态
 extension DHPlayerView{
-
+    
     //切换播放状态
     @objc func playOrPause(){
         if state == .pause || state == .stop{
@@ -278,7 +308,7 @@ extension DHPlayerView{
             pause()
         }
     }
-
+    
     /// 播放
     func play(){
         if state == .playing {return}
@@ -286,21 +316,19 @@ extension DHPlayerView{
         state = .playing
         avplayer.play()
         consoleBar.changePlayButton(imageName: "player_pause")
-        //正在初始化播放，不隐藏封面
-        if !isSceneTransition {
-            //隐藏封面
-            consoleBar.posterImageViewIsHidden(true)
-            //直接隐藏控制面板
-            hideConsoleBarView(time: 0.2)
-        }
+        
+        //隐藏封面
+        consoleBar.posterImageViewIsHidden(true)
+        //直接隐藏控制面板
+        hideConsoleBarView(time: 0.2)
+        
         //显示控制面板
         consoleBar.bottomBarIsHidden(false)
         delegate?.onPlay(player: self)
     }
-
-
+    
+    
     /// 当播放被停止
-    ///
     func stop(){
         debugPrint("停止")
         if state == .stop {return}
@@ -319,7 +347,7 @@ extension DHPlayerView{
         delegate?.onStop(player: self)
         releaseTrack()
     }
-
+    
     /// 当播放被暂停
     ///
     @objc func pause(){
@@ -332,48 +360,47 @@ extension DHPlayerView{
         slowConsoleBarView(time: 0.2)
         delegate?.onPause(player: self)
     }
-
 }
 
 /// MARK - DHPlayerConsolerViewDelegate
 extension DHPlayerView:DHPlayerConsolerViewDelegate{
-
+    
     /// 修改播放速度
     func rateButtonClick() {
-        print("rateButtonClick")
+        hideConsoleBarView(time: 0.1)
         DHPlayerRateView.show(superview: self, fullScreenStatus: fullScreenStatus) {[weak self] (rate) in
             guard let strongSelf = self else{return}
             strongSelf.setRate(rate)
         }
     }
-
+    
     /// 返回普通控制器
     func backButtonClick(){
         fullScreenBtnEvent()
     }
-
+    
     /// 播放按钮被点击
     func playBtnClick(){
         playOrPause()
     }
-
+    
     /// 暂停按钮被点击
     func replayButtonClick()  {
         initPlay()
         consoleBar.replayButtonIsHidden(true)
     }
-
+    
     /// 切换横竖屏按钮被点击
     func fullScreenBtnClick(){
         fullScreenBtnEvent()
     }
-
+    
     /// 滑动块滑动中事件
     func sliderTouchDown(_ slider:UISlider){
         sliding = true
         pause()
     }
-
+    
     /// 滑动块滑动中事件
     func sliderTouchUpOut(_ slider:UISlider){
         //当视频状态为AVPlayerStatusReadyToPlay时才处理
