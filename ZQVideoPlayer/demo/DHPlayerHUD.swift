@@ -10,15 +10,14 @@ import UIKit
 
 class DHPlayerHUD: NSObject {
     /// 音量
-    static func showVolume(progress:CGFloat,superview:UIView,fullScreenStatus:Bool = false)  {
+    static func showVolume(progress:CGFloat,superview:UIView,isLandscape:Bool = false)  {
         if (superview.viewWithTag(19950526) == nil) {
-            var subFrame = CGRect(x: 0, y: 0, width: kWidth/2, height: 40)
+            var subFrame = CGRect(x: kWidth/4, y: superview.frame.height/2-20, width: kWidth/2, height: 40)
             let backgroundView = UIView(frame: subFrame)
             backgroundView.tag = 19950526
             backgroundView.backgroundColor  = UIColor.black.withAlphaComponent(0.2)
             backgroundView.layer.cornerRadius = 5
             backgroundView.layer.masksToBounds = true
-            backgroundView.center = superview.center
             superview.addSubview(backgroundView)
             ///
             subFrame = CGRect(x: 10, y: 10, width: 20, height: 20)
@@ -40,9 +39,7 @@ class DHPlayerHUD: NSObject {
             progressView.progress = Float(progress)
             progressView.tag = 199505262
             backgroundView.addSubview(progressView)
-            if fullScreenStatus{
-                backgroundView.transform = CGAffineTransform(rotationAngle: .pi/2)
-            }
+         
         }else{
             guard let backgroundView = superview.viewWithTag(19950526) else {return}
             guard let subview1 = backgroundView.viewWithTag(199505261) else {return}
@@ -61,15 +58,14 @@ class DHPlayerHUD: NSObject {
     }
     
     /// 屏幕亮度
-    static func showBrightness(progress:CGFloat,superview:UIView,fullScreenStatus:Bool = false)  {
+    static func showBrightness(progress:CGFloat,superview:UIView,isLandscape:Bool = false)  {
         if (superview.viewWithTag(19950526) == nil) {
-            var subFrame = CGRect(x: 0, y: 0, width: kWidth/2, height: 40)
+            var subFrame = CGRect(x: kWidth/4, y: superview.frame.height/2-20, width: kWidth/2, height: 40)
             let backgroundView = UIView(frame: subFrame)
             backgroundView.tag = 19950526
             backgroundView.backgroundColor  = UIColor.black.withAlphaComponent(0.2)
             backgroundView.layer.cornerRadius = 5
             backgroundView.layer.masksToBounds = true
-            backgroundView.center = superview.center
             superview.addSubview(backgroundView)
             ///
             subFrame = CGRect(x: 10, y: 10, width: 20, height: 20)
@@ -85,9 +81,7 @@ class DHPlayerHUD: NSObject {
             progressView.progress = Float(progress)
             progressView.tag = 199505262
             backgroundView.addSubview(progressView)
-            if fullScreenStatus{
-                backgroundView.transform = CGAffineTransform(rotationAngle: .pi/2)
-            }
+   
         }else{
             guard let backgroundView = superview.viewWithTag(19950526) else {return}
             let progressView:UIProgressView = backgroundView.viewWithTag(199505262) as! UIProgressView
@@ -96,11 +90,11 @@ class DHPlayerHUD: NSObject {
     }
     
     /// 播放进度
-    static func showPlayerProgress(currentTime:CGFloat,totalTime:CGFloat,superview:UIView,fullScreenStatus:Bool = false)  {
+    static func showPlayerProgress(currentTime:CGFloat,totalTime:CGFloat,superview:UIView,isLandscape:Bool = false)  {
         let current = DHPlayerHUD.formatPlayTime(secounds: TimeInterval(currentTime))
         let total = DHPlayerHUD.formatPlayTime(secounds: TimeInterval(totalTime))
         if (superview.viewWithTag(19950526) == nil) {
-            let subFrame = CGRect(x: 0, y: 0, width: 160, height: 90)
+            let subFrame = CGRect(x: (kWidth-160)/2, y: superview.frame.height/2-45, width: 160, height: 90)
             let label = UILabel(frame: subFrame)
             label.tag = 19950526
             label.backgroundColor  = UIColor.black.withAlphaComponent(0.7)
@@ -113,9 +107,7 @@ class DHPlayerHUD: NSObject {
             label.font = UIFont.systemFont(ofSize: 22)
             label.text = "\(current)/\(total)"
             label.textAlignment = .center
-            if fullScreenStatus{
-                label.transform = CGAffineTransform(rotationAngle: .pi/2)
-            }
+   
         }else{
             guard let subview1 = superview.viewWithTag(19950526) else {return}
             let label:UILabel = subview1 as! UILabel

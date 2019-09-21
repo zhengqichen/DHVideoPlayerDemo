@@ -51,8 +51,8 @@ extension DHPlayerView:UIGestureRecognizerDelegate{
         let progressX = translation.x / gesture.view!.bounds.width
         /// 手势在Y轴上的滑动进度
         let progressY = translation.y / gesture.view!.bounds.height
-        // 获取屏幕窗口
-        let keyWindow = UIApplication.shared.keyWindow!
+//        // 获取屏幕窗口
+//        let keyWindow = UIApplication.shared.keyWindow!
         if gesture.state == .began {
             /// 开始滑动时重置滑动方向为空
             direction = .none
@@ -70,11 +70,11 @@ extension DHPlayerView:UIGestureRecognizerDelegate{
                 if isSestureRecognizerLocationLeft {
                     // 滑动左边屏幕修改音量
                     volumeViewSlider.value = Float(volume - progressY)
-                    DHPlayerHUD.showVolume(progress: CGFloat(volumeViewSlider!.value), superview:fullScreenStatus ? keyWindow:self,fullScreenStatus:fullScreenStatus )
+                    DHPlayerHUD.showVolume(progress: CGFloat(volumeViewSlider!.value), superview:self,isLandscape:isLandscape )
                 }else{
                     // 滑动右边屏幕修改亮度
                     UIScreen.main.brightness = brightness - progressY
-                    DHPlayerHUD.showBrightness(progress: CGFloat(UIScreen.main.brightness), superview: fullScreenStatus ? keyWindow:self,fullScreenStatus:fullScreenStatus)
+                    DHPlayerHUD.showBrightness(progress: CGFloat(UIScreen.main.brightness), superview: self,isLandscape:isLandscape)
                 }
                 break
             case .right,.left:
@@ -83,13 +83,13 @@ extension DHPlayerView:UIGestureRecognizerDelegate{
                 currentTime = max(currentTime, 0)
                 currentTime = min(currentTime, totalTimeSecounds)
                 changePlayerProgress(Float(currentTime))
-                DHPlayerHUD.showPlayerProgress(currentTime: CGFloat(currentTime), totalTime: CGFloat(totalTimeSecounds), superview: fullScreenStatus ? keyWindow:self,fullScreenStatus:fullScreenStatus)
+                DHPlayerHUD.showPlayerProgress(currentTime: CGFloat(currentTime), totalTime: CGFloat(totalTimeSecounds), superview: self,isLandscape:isLandscape)
                 break
             default :
                 break
             }
         }else if gesture.state == .ended{
-            DHPlayerHUD.hidden(superview: fullScreenStatus ? keyWindow:self)
+            DHPlayerHUD.hidden(superview: self)
         }
     }
 

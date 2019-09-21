@@ -32,6 +32,7 @@ class ViewController: UIViewController{
         cellDatas = ["net","location"]
         view.addSubview(tableView)
     }
+    
     //  拍照或者选择
     func pickerVideo(){
         //判断设置是否支持图片库
@@ -52,6 +53,8 @@ class ViewController: UIViewController{
             print("没有权限操作")
         }
     }
+    
+    
 }
 
 extension ViewController:UITableViewDelegate,UITableViewDataSource{
@@ -116,3 +119,4 @@ extension ViewController:UIImagePickerControllerDelegate,UINavigationControllerD
         return UIImage(cgImage: imageRef)
     }
 }
+

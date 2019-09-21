@@ -11,9 +11,9 @@ import UIKit
 
 class DHPlayerRateView: NSObject {
     /// 播放速递
-    static func show(superview:UIView,fullScreenStatus:Bool = false,completionHandler:@escaping((_ rate:Float)->Void))  {
-        var subFrame = superview.frame
-        if fullScreenStatus{
+    static func show(superview:UIView,isLandscape:Bool = false,completionHandler:@escaping((_ rate:Float)->Void))  {
+        var subFrame = superview.bounds
+        if isLandscape{
             subFrame = CGRect(x: 0, y: 0, width: kHeight, height: kWidth)
         }
         
@@ -28,7 +28,7 @@ class DHPlayerRateView: NSObject {
         
         ///
         var tempWidth = (subFrame.width-50)/4
-        if fullScreenStatus{
+        if isLandscape{
             tempWidth = 120
             subFrame = CGRect(x: kNaviBarHeight, y: backgroundView.frame.height-tempWidth-90, width: 200, height: 20)
         }else{
@@ -37,20 +37,20 @@ class DHPlayerRateView: NSObject {
 
         let titleLabel = UILabel(frame: subFrame)
         titleLabel.textColor = UIColor.white
-        titleLabel.font = UIFont.systemFont(ofSize: fullScreenStatus ? 18:15)
+        titleLabel.font = UIFont.systemFont(ofSize: isLandscape ? 18:15)
         titleLabel.text = "播放倍速"
         backgroundView.addSubview(titleLabel)
         let rates = [0.5,1.0,1.5,2.0]
         for index in 0...3 {
-            if fullScreenStatus{
+            if isLandscape{
                 subFrame = CGRect(x: CGFloat(index)*(tempWidth+10)+kNaviBarHeight, y: titleLabel.frame.maxY+20, width: tempWidth, height: tempWidth-20)
             }else{
                 subFrame = CGRect(x: CGFloat(index)*(tempWidth+10)+10, y: titleLabel.frame.maxY+20, width: tempWidth, height: tempWidth-20)
             }
             let tempButton = DHButton(frame:subFrame)
             tempButton.setTitle("\(rates[index])X", for: .normal)
-            tempButton.layer.cornerRadius = fullScreenStatus ? 10:5
-            tempButton.titleLabel?.font = UIFont.systemFont(ofSize: fullScreenStatus ? 22:15)
+            tempButton.layer.cornerRadius = isLandscape ? 10:5
+            tempButton.titleLabel?.font = UIFont.systemFont(ofSize: isLandscape ? 22:15)
             tempButton.backgroundColor = UIColor.black.withAlphaComponent(0.3)
             backgroundView.addSubview(tempButton)
             tempButton.dh_ButtonClick { (button) in

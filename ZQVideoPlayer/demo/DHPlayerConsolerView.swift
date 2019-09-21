@@ -241,40 +241,53 @@ extension DHPlayerConsolerView{
     
     // 全屏重设置frame
     func setFullScreenSubviewFrame(){
+        print("setFullScreenSubviewFrame")
         bottomShadeImageView.addSubview(rateButton)
         backButton.isHidden = false
+        
         //封面
         posterImageView.frame = bounds
+        
         //遮罩图像1
         topShadeImageView.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height/2)
+        
         //播放按钮
         var subframe = CGRect(x: (frame.width-50)/2, y: (frame.height-50)/2, width: 50, height: 50)
         replayButton.frame = subframe
+        
         //返回按钮
         subframe = CGRect(x: kNaviBarHeight, y: 20, width: 50, height: 40)
         backButton.frame = subframe
+        
         //标题
         subframe = CGRect(x:kNaviBarHeight+40, y: 20, width: frame.width-kNaviBarHeight*2-50, height: 40)
         titleLabel.frame = subframe
+        
         //加载动画
         loadIndicator.frame = bounds
+        
         //遮罩图像2
         subframe = CGRect(x: 0, y: frame.height/2, width: frame.width, height: frame.height/2)
         bottomShadeImageView.frame = subframe
+        
         //滑动块
         subframe = CGRect(x: kNaviBarHeight, y: bottomShadeImageView.frame.height-75, width: frame.width-kNaviBarHeight*2, height: 30)
         slider.frame = subframe
+        
         //播放按钮
         subframe = CGRect(x: kNaviBarHeight+5, y: bottomShadeImageView.frame.height-50, width: 50, height: 40)
         playButton.frame = subframe
+        
         //当前播放时长
         subframe = CGRect(x: kNaviBarHeight+5, y: bottomShadeImageView.frame.height-90, width: 50, height: 20)
         currDurationLabel.frame = subframe
         currDurationLabel.textAlignment = .left
+        
         //总时长
         subframe = CGRect(x:frame.width-kNaviBarHeight-55, y: bottomShadeImageView.frame.height-90, width: 50, height: 20)
         totalDurationLabel.frame = subframe
         totalDurationLabel.textAlignment = .right
+        
         //横屏切换
         subframe = CGRect(x:frame.width - 55-kNaviBarHeight, y: bottomShadeImageView.frame.height-50, width: 50, height: 40)
         fullScreenButton.frame = subframe
@@ -347,6 +360,7 @@ extension DHPlayerConsolerView{
     func setPosterImageView(image:UIImage)  {
         posterImageView.image = image
     }
+    
     /// 更换播放按钮状态图标
     func changePlayButton(imageName:String)  {
         playButton.setImage(UIImage.init(named: imageName), for: .normal)

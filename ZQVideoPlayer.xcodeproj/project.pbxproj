@@ -17,7 +17,6 @@
 		6B4FA70A2306963800098DEE /* DHPlayerView+Obsever.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B4FA6FF2306963500098DEE /* DHPlayerView+Obsever.swift */; };
 		6B4FA70C2306963800098DEE /* DHPlayerView+Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B4FA7012306963600098DEE /* DHPlayerView+Screen.swift */; };
 		6B4FA70D2306963800098DEE /* DHPlayerViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B4FA7022306963600098DEE /* DHPlayerViewDelegate.swift */; };
-		6B4FA70E2306963800098DEE /* DHPlayerWrapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B4FA7032306963600098DEE /* DHPlayerWrapView.swift */; };
 		6B4FA70F2306963800098DEE /* DHPlayerHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B4FA7042306963600098DEE /* DHPlayerHUD.swift */; };
 		6B4FA7102306963800098DEE /* DHAmplifyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B4FA7052306963700098DEE /* DHAmplifyButton.swift */; };
 		6B4FA7112306963800098DEE /* DHMediaTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B4FA7062306963700098DEE /* DHMediaTool.swift */; };
@@ -67,7 +66,6 @@
 		6B4FA6FF2306963500098DEE /* DHPlayerView+Obsever.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DHPlayerView+Obsever.swift"; sourceTree = "<group>"; };
 		6B4FA7012306963600098DEE /* DHPlayerView+Screen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DHPlayerView+Screen.swift"; sourceTree = "<group>"; };
 		6B4FA7022306963600098DEE /* DHPlayerViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DHPlayerViewDelegate.swift; sourceTree = "<group>"; };
-		6B4FA7032306963600098DEE /* DHPlayerWrapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DHPlayerWrapView.swift; sourceTree = "<group>"; };
 		6B4FA7042306963600098DEE /* DHPlayerHUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DHPlayerHUD.swift; sourceTree = "<group>"; };
 		6B4FA7052306963700098DEE /* DHAmplifyButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DHAmplifyButton.swift; sourceTree = "<group>"; };
 		6B4FA7062306963700098DEE /* DHMediaTool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DHMediaTool.swift; sourceTree = "<group>"; };
@@ -187,7 +185,6 @@
 				6B86517B230AB28C00BA3B4C /* DHPlayerRateView.swift */,
 				6B4FA7082306963700098DEE /* DHPlayerView.swift */,
 				6B4FA7092306963700098DEE /* DHPlayerConsolerView.swift */,
-				6B4FA7032306963600098DEE /* DHPlayerWrapView.swift */,
 				6B4FA6FF2306963500098DEE /* DHPlayerView+Obsever.swift */,
 				6B4FA7012306963600098DEE /* DHPlayerView+Screen.swift */,
 				6B4FA7072306963700098DEE /* DHPlayerView+GestureRecognizer.swift */,
@@ -372,7 +369,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				6B4FA7102306963800098DEE /* DHAmplifyButton.swift in Sources */,
-				6B4FA70E2306963800098DEE /* DHPlayerWrapView.swift in Sources */,
 				6B4FA7142306963800098DEE /* DHPlayerConsolerView.swift in Sources */,
 				6B4FA70A2306963800098DEE /* DHPlayerView+Obsever.swift in Sources */,
 				6B86512A230A449400BA3B4C /* DHVideoViewController.swift in Sources */,

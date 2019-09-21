@@ -28,6 +28,9 @@ extension DHPlayerView {
             switch status {
             case .failed,.unknown:
                 delegate?.onError(player: self)
+                if resource_url != nil {
+                    DHMediaTool.shared.remove(ident: resource_url!.absoluteString)
+                }
             case .readyToPlay:
                 readyPaly()
             default:
@@ -69,7 +72,7 @@ extension DHPlayerView {
 
     //显示总时长
     private func readTotalDuration(){
-        totalTimeSecounds = TimeInterval(playerItem.duration.value) / TimeInterval(playerItem.duration.timescale);
+        totalTimeSecounds = TimeInterval(playerItem.duration.value) / TimeInterval(playerItem.duration.timescale)
         let totalStr = formatPlayTime(secounds: totalTimeSecounds)
         consoleBar.changeTotalDurationLabel(text: totalStr)
     }
@@ -77,6 +80,7 @@ extension DHPlayerView {
     /// 更新进度
     @objc func updateSchedule(){
         //计算当前播放时间
+        guard avplayer != nil else{return}
         currentTime = CMTimeGetSeconds(avplayer.currentTime())
         let timeStr = "\(formatPlayTime(secounds: currentTime))"
         consoleBar.changeCurrDurationLabel(text: timeStr)
@@ -126,10 +130,8 @@ extension DHPlayerView {
         consoleBar.isHidden = false
         UIView.animate(withDuration: time, animations: {
             self.consoleBar.alpha = 1
-            if self.fullScreenStatus{
+            if isLandscape{
                 self.consoleBar.fullScreenShowConsolerView()
-            }else{
-                
             }
         }) { (finish) in
             self.setConsoleBarTimer()
@@ -143,7 +145,7 @@ extension DHPlayerView {
     func hideConsoleBarView(time:TimeInterval) {
         if avplayer == nil {return}
         UIView.animate(withDuration: time, animations: {
-            if self.fullScreenStatus{
+            if isLandscape{
                 self.consoleBar.fullScreenHiddenConsolerView()
             }else{
                 self.consoleBar.alpha = 0

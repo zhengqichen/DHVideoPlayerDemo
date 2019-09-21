@@ -44,7 +44,7 @@ class DHPlayerView: UIView {
     //滑动块交互中
     var sliding:Bool = false
     //是否全屏
-    var fullScreenStatus:Bool = false
+//    var isLandscape:Bool = false
     //是否准备好了组件
     var isReadyCombin:Bool = false
     
@@ -70,7 +70,6 @@ class DHPlayerView: UIView {
     var volume:CGFloat = 0
     // 滑动屏幕快进/快退的增量
     var changeProgresValue:CGFloat = 30
-    
     // 物理音量键计时器
     var volumeTimer:Timer!
     var timeInterval = -1
@@ -86,7 +85,7 @@ class DHPlayerView: UIView {
     }()
     
     //播放器视图
-    lazy var playerView:UIView = {
+    lazy var dh_playerView:UIView = {
         let subview = UIView()
         return subview
     }()
@@ -138,8 +137,8 @@ class DHPlayerView: UIView {
         playerLayer.videoGravity = AVLayerVideoGravity.resizeAspect
         playerLayer.contentsScale = UIScreen.main.scale
         //播放器视图
-        insertSubview(playerView, belowSubview: consoleBar)
-        playerView.layer.insertSublayer(playerLayer, at: 0)
+        insertSubview(dh_playerView, belowSubview: consoleBar)
+        dh_playerView.layer.insertSublayer(playerLayer, at: 0)
         layer.insertSublayer(playerLayer, at: 0)
     }
     
@@ -158,14 +157,14 @@ class DHPlayerView: UIView {
         consoleBar.rateButtonIsHidden(true)
         //
         // 获取屏幕窗口
-        let keyWindow = UIApplication.shared.keyWindow!
-        DHPlayerHUD.hidden(superview: fullScreenStatus ? keyWindow:self)
+        DHPlayerHUD.hidden(superview: self)
         /// 播放完成 关闭计时器
         consoleBarTimeOffTimer()
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        
         playerLayer?.frame = bounds
     }
     
@@ -182,9 +181,7 @@ extension DHPlayerView{
             return
         }
         timeInterval = 0
-        // 获取屏幕窗口
-        let keyWindow = UIApplication.shared.keyWindow!
-        DHPlayerHUD.showVolume(progress: CGFloat(volumeViewSlider!.value), superview:fullScreenStatus ? keyWindow:self,fullScreenStatus:fullScreenStatus )
+        DHPlayerHUD.showVolume(progress: CGFloat(volumeViewSlider!.value), superview:self,isLandscape:isLandscape )
         if volumeTimer == nil {
             /// 计时器，监听是否在用物理音量键修改音量
             volumeTimer = Timer.scheduledTimer(timeInterval: 1.0,target: self,selector: #selector(volumeTimerRuning),userInfo: nil,repeats: true)
@@ -196,9 +193,7 @@ extension DHPlayerView{
         timeInterval += 1
         /// 当音量超过2秒没有变化后，删除显示音量的进度条
         if timeInterval >= 2{
-            // 获取屏幕窗口
-            let keyWindow = UIApplication.shared.keyWindow!
-            DHPlayerHUD.hidden(superview: fullScreenStatus ? keyWindow:self)
+            DHPlayerHUD.hidden(superview: self)
             volumeOffTimer()
         }
     }
@@ -270,7 +265,6 @@ extension DHPlayerView{
     /// 释放跟踪
     private func releaseTrack(){
         if avplayer == nil {return}
-        debugPrint(">>> 释放资源")
         playerItem.cancelPendingSeeks()
         playerItem.asset.cancelLoading()
         avplayer.currentItem?.cancelPendingSeeks()
@@ -312,11 +306,10 @@ extension DHPlayerView{
     /// 播放
     func play(){
         if state == .playing {return}
-        debugPrint("播放中")
         state = .playing
         avplayer.play()
         consoleBar.changePlayButton(imageName: "player_pause")
-        
+
         //隐藏封面
         consoleBar.posterImageViewIsHidden(true)
         //直接隐藏控制面板
@@ -325,17 +318,21 @@ extension DHPlayerView{
         //显示控制面板
         consoleBar.bottomBarIsHidden(false)
         delegate?.onPlay(player: self)
+        //尝试继续播放
+        let ctime = DHMediaTool.shared.lastBreakTime(ident: resource_url!.absoluteString)
+        if ctime != -1 {
+            seek(time: ctime)
+        }
     }
-    
-    
+
     /// 当播放被停止
     func stop(){
-        debugPrint("停止")
         if state == .stop {return}
         pause()
         state = .stop
         //如果是全屏，退出
-        if fullScreenStatus {
+        if isLandscape {
+            print("stop()--------------------------------------")
             quitFullScreen()
         }
         //停止
@@ -351,7 +348,6 @@ extension DHPlayerView{
     /// 当播放被暂停
     ///
     @objc func pause(){
-        debugPrint("暂停")
         if state == .pause {return}
         state = .pause
         avplayer.pause()
@@ -359,6 +355,10 @@ extension DHPlayerView{
         //显示面板
         slowConsoleBarView(time: 0.2)
         delegate?.onPause(player: self)
+        if resource_url != nil {
+            //当视频停止播放，记录播放当前时间
+            DHMediaTool.shared.record(ident:resource_url!.absoluteString, current: currentTime, total: totalTimeSecounds)
+        }
     }
 }
 
@@ -368,7 +368,7 @@ extension DHPlayerView:DHPlayerConsolerViewDelegate{
     /// 修改播放速度
     func rateButtonClick() {
         hideConsoleBarView(time: 0.1)
-        DHPlayerRateView.show(superview: self, fullScreenStatus: fullScreenStatus) {[weak self] (rate) in
+        DHPlayerRateView.show(superview: self, isLandscape: isLandscape) {[weak self] (rate) in
             guard let strongSelf = self else{return}
             strongSelf.setRate(rate)
         }
@@ -388,6 +388,7 @@ extension DHPlayerView:DHPlayerConsolerViewDelegate{
     func replayButtonClick()  {
         initPlay()
         consoleBar.replayButtonIsHidden(true)
+        
     }
     
     /// 切换横竖屏按钮被点击
@@ -419,4 +420,40 @@ extension DHPlayerView:DHPlayerConsolerViewDelegate{
         }
     }
 }
+
+extension DHPlayerView{
+    /// 加载播放资源(网络)
+    func setResourceDataForNet(resource:URL,title:String?,posterImageString:String?,isPlay:Bool=true){
+        
+        setResourceUrl(url: resource)
+        if let title = title {
+            setTitle(title: title)
+        }
+        if let posterImageString = posterImageString {
+            setPosterImage(imagePath: posterImageString)
+        }
+        initPlay()
+        if isPlay{
+            play()
+        }
+    }
+    
+    /// 加载播放资源(本地)
+    func setResourceDataForLocation(resource:URL,title:String?,posterImage:UIImage?,isPlay:Bool=true){
+        initPlay()
+        setResourceUrl(url: resource)
+        if let title = title {
+            setTitle(title: title)
+        }
+        if let posterImage = posterImage {
+            setPosterImage(image: posterImage)
+        }
+        initPlay()
+        if isPlay{
+            play()
+        }
+    }
+
+}
+
 
